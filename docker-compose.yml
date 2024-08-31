@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  minha-api:
+    image: simple-chat-img:latest
+    networks:
+      - minha-rede
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 612M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    ports:
+      - "8080:8080"
+    secrets:
+      - p
+      - u
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: simple_chat
+      POSTGRES_USER_FILE: /run/secrets/u
+      POSTGRES_PASSWORD_FILE: /run/secrets/p
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - minha-rede
+    secrets:
+      - u
+      - p
+
+networks:
+  minha-rede:
+    driver: overlay
+
+volumes:
+  postgres-data:
+
+secrets:
+  p:
+    external: true
+  u:
+    external: true

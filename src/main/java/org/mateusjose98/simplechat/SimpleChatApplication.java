@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 public class SimpleChatApplication implements CommandLineRunner {
@@ -15,8 +16,15 @@ public class SimpleChatApplication implements CommandLineRunner {
     }
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private Environment environment;
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("URL: " + environment.getProperty("spring.datasource.url"));
+        System.out.println("Username: " + environment.getProperty("spring.datasource.username"));
+        environment.getProperty("spring.datasource.url");
+        environment.getProperty("spring.datasource.username");
+
         Users joao = new Users();
         joao.setEmail("joao@email.com");
         joao.setName("João");
